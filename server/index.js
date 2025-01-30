@@ -1,5 +1,4 @@
 import express from "express";
-import { Socket } from "node:dgram";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
 
@@ -19,9 +18,11 @@ app.get("/", (req, res) => {
   res.send("<h1>Hello world</h1>");
 });
 
-io.on("connection", (Socket) => {
+io.on("connect", (socket) => {
   console.log("User Connected");
-  console.log("User id: ", Socket.id);
+  console.log("Socket id: ", socket.id);
+  socket.emit("message", `Welcome to the server.`);
+  socket.broadcast.emit("message", `User: ${socket.id}, joined the server`);
 });
 
 server.listen(port, () => {
