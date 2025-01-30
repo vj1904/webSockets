@@ -23,6 +23,10 @@ io.on("connect", (socket) => {
   console.log("Socket id: ", socket.id);
   socket.emit("message", `Welcome to the server.`);
   socket.broadcast.emit("message", `User: ${socket.id}, joined the server`);
+
+  socket.on("disconnect", () => {
+    console.log("User Disconnected: ", socket.id);
+  });
 });
 
 server.listen(port, () => {

@@ -13,6 +13,10 @@ const App = () => {
     socket.on("message", (msg) => {
       console.log(msg);
     });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   return <div>App</div>;
