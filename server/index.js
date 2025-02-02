@@ -21,9 +21,20 @@ app.get("/", (req, res) => {
 io.on("connect", (socket) => {
   console.log("User Connected");
   console.log("Socket id: ", socket.id);
-  socket.emit("message", `Welcome to the server.`);
-  socket.broadcast.emit("message", `User: ${socket.id}, joined the server`);
 
+  // emit a welcome message when a user is connected
+  socket.emit("welcome", `Welcome to the server.`);
+
+  // broadcast a notification when a new user is connected to the server/IO
+  socket.broadcast.emit("welcome", `User: ${socket.id}, joined the server`);
+
+  // handle the message sent by the user and broadcast it to other users
+  socket.on("message", ({ message, roomId }) => {
+    const socketId = socket.id;
+    io.to(roomId).emit("recieve-message", { message, socketId });
+  });
+
+  // handle the disconnct event before the page is repainted and user's socket id changes.
   socket.on("disconnect", () => {
     console.log("User Disconnected: ", socket.id);
   });
