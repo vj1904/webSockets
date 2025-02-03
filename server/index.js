@@ -31,7 +31,14 @@ io.on("connect", (socket) => {
   // handle the message sent by the user and broadcast it to other users
   socket.on("message", ({ message, roomId }) => {
     const socketId = socket.id;
-    io.to(roomId).emit("recieve-message", { message, socketId });
+    socket.to(roomId).emit("recieve-message", { message, socketId });
+  });
+
+  // add users to room
+  socket.on("join-room", (room) => {
+    socket.join(room);
+    console.log("user joined room: ", room);
+    console.log(socket);
   });
 
   // handle the disconnct event before the page is repainted and user's socket id changes.
